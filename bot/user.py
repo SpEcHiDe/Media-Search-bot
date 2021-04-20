@@ -19,7 +19,9 @@
 
 """ MtProto User """
 
+import re
 from telethon import TelegramClient, __version__
+from telethon.sessions import StringSession
 from bot import (
     API_HASH,
     APP_ID,
@@ -32,8 +34,12 @@ class User(TelegramClient):
     """ modded client for GetSongsUser """
 
     def __init__(self):
+        session_name = TG_USER_SESSION
+        if session_name == ":memory:" or len(session_name) > 17:
+            session_name = re.sub(r"[\n\s]+]", "", session_name)
+            session_name = StringSession(session_name)
         super().__init__(
-            TG_USER_SESSION,
+            session_name,
             api_hash=API_HASH,
             api_id=APP_ID,
             base_logger=LOGGER(__name__)
